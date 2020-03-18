@@ -1,0 +1,93 @@
+--- a/src/main/java/org/apache/pdfbox/pdmodel/interactive/form/PDAcroForm.java
++++ b/src/main/java/org/apache/pdfbox/pdmodel/interactive/form/PDAcroForm.java
+@@ -250,31 +250,69 @@
+ 
+-            for (int i = 0; i < fields.size() && retval == null; i++)
+-            {
+-                COSDictionary element = (COSDictionary) fields.getObject(i);
+-                if (element != null)
+-                {
+-                    COSString fieldName =
++            } else {
++                if (fields == null) {
++                    for (int i = 0; i < new COSArray().size() && retval == null; i++)
++                    {
++                        COSDictionary element = (COSDictionary) fields.getObject(i);
++                        if (element != null)
++                        {
++                            COSString fieldName =
+                             (COSString)element.getDictionaryObject(COSName.T);
+-                    if (fieldName.getString().equals(fullyQualifiedName) ||
++                            if (fieldName.getString().equals(fullyQualifiedName) ||
+                             fieldName.getString().equals(nameSubSection[0]))
++                            {
++                                PDField root = PDField.fromDictionary(this, element, null);
++                                if (root != null)
++                                {
++                                    if (nameSubSection.length > 1)
++                                    {
++                                        PDField kid = root.findKid(nameSubSection, 1);
++                                        if (kid != null)
++                                        {
++                                            retval = kid;
++                                        }
++                                        else
++                                        {
++                                            retval = root;
++                                        }
++                                    }
++                                    else
++                                    {
++                                        retval = root;
++                                    }
++                                }
++                            }
++                        }
++                    }
++                } else {
++                    for (int i = 0; i < fields.size() && retval == null; i++)
+                     {
+-                        PDField root = PDField.fromDictionary(this, element, null);
+-                        if (root != null)
++                        COSDictionary element = (COSDictionary) fields.getObject(i);
++                        if (element != null)
+                         {
+-                            if (nameSubSection.length > 1)
++                            COSString fieldName =
++                            (COSString)element.getDictionaryObject(COSName.T);
++                            if (fieldName.getString().equals(fullyQualifiedName) ||
++                            fieldName.getString().equals(nameSubSection[0]))
+                             {
+-                                PDField kid = root.findKid(nameSubSection, 1);
+-                                if (kid != null)
++                                PDField root = PDField.fromDictionary(this, element, null);
++                                if (root != null)
+                                 {
+-                                    retval = kid;
++                                    if (nameSubSection.length > 1)
++                                    {
++                                        PDField kid = root.findKid(nameSubSection, 1);
++                                        if (kid != null)
++                                        {
++                                            retval = kid;
++                                        }
++                                        else
++                                        {
++                                            retval = root;
++                                        }
++                                    }
++                                    else
++                                    {
++                                        retval = root;
++                                    }
+                                 }
+-                                else
+-                                {
+-                                    retval = root;
+-                                }
+                             }
+-                            else
+-                            {
+-                                retval = root;
+-                            }
+                         }

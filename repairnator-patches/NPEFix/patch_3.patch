@@ -1,0 +1,15 @@
+--- a/src/main/java/org/apache/pdfbox/pdmodel/interactive/form/PDAcroForm.java
++++ b/src/main/java/org/apache/pdfbox/pdmodel/interactive/form/PDAcroForm.java
+@@ -250,3 +250,7 @@
+ 
+-            for (int i = 0; i < fields.size() && retval == null; i++)
++            } else {
++                if (fields == null) {
++                    return null;
++                }
++                for (int i = 0; i < fields.size() && retval == null; i++)
+             {
+@@ -283,2 +287,3 @@
+             }
++            }
+         }
